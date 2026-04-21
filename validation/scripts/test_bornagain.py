@@ -3,7 +3,8 @@ import numpy as np
 from test_discovery import get_test_data
 
 import bornagain as ba
-from bornagain import angstrom
+from bornagain import angstrom, nm
+from bornagain.numpyutil import Arrayf64Converter as dac
 
 
 def get_sample(slabs):
@@ -11,28 +12,42 @@ def get_sample(slabs):
     Defines sample and returns it. Note that SLD-based materials are used.
     """
     # creating materials
-    multi_layer = ba.MultiLayer()
+    multi_layer = ba.Sample()
 
     ambient = ba.MaterialBySLD("ma", slabs[0, 1] * 1e-6, 0)
     layer = ba.Layer(ambient)
     multi_layer.addLayer(layer)
 
+    # use erf transition between layers:
+    transient = ba.ErfTransient()
+
     for slab in slabs[1:-1]:
         material = ba.MaterialBySLD("stuff", slab[1] * 1e-6, slab[2] * 1e-6)
-        layer = ba.Layer(material, slab[0] * angstrom)
 
-        roughness = ba.LayerRoughness()
-        roughness.setSigma(slab[3] * angstrom)
+        #  sig: (
+        #     SelfAffineFractalModel self,
+        #     double sigma,
+        #     double hurst,
+        #     double lateralCorrLength,
+        #     double maxSpatFrequency=0.5
+        #   ) -> SelfAffineFractalModel
 
-        multi_layer.addLayerWithTopRoughness(layer, roughness)
+        r_autocorr = ba.SelfAffineFractalModel(slab[3] * angstrom, 1.0, 1000 * nm)
+        roughness = ba.Roughness(r_autocorr, transient)
+        layer = ba.Layer(material, slab[0] * angstrom, roughness)
+
+        multi_layer.addLayer(layer)
 
     substrate = ba.MaterialBySLD("msub", slabs[-1, 1] * 1e-6, 0)
-    layer = ba.Layer(substrate)
-    roughness = ba.LayerRoughness()
-    roughness.setSigma(slabs[-1, 3] * angstrom)
-    multi_layer.addLayerWithTopRoughness(layer, roughness)
 
-    multi_layer.setRoughnessModel(ba.RoughnessModel.NEVOT_CROCE)
+    r_autocorr = ba.SelfAffineFractalModel(slabs[-1, 3] * angstrom, 1.0, 1000 * nm)
+
+    roughness = ba.Roughness(r_autocorr, transient)
+    layer = ba.Layer(substrate, roughness)
+
+    multi_layer.addLayer(layer)
+
+    # multi_layer.setRoughnessModel(ba.RoughnessModel.NEVOT_CROCE)
 
     return multi_layer
 
@@ -101,7 +116,7 @@ def resolution_test(slabs, data):
     simulation = get_simulation_smeared(data[:, 0], data[:, -1], sample)
 
     res = simulation.simulate()
-    R = res.array()
+    R = dac.npArray(res.dataArray())
 
     assert R.shape == data[:, 1].shape
 
@@ -122,7 +137,7 @@ def kernel_test(slabs, data):
     sample = get_sample(slabs)
     simulation = get_simulation(data[:, 0], sample)
     res = simulation.simulate()
-    R = res.array()
+    R = dac.npArray(res.dataArray())
 
     assert R.shape == data[:, 1].shape
 
