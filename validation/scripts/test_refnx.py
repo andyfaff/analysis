@@ -13,7 +13,6 @@ from refnx.reflect import (
     PolarisedReflectModel,
 )
 
-
 # cython backend may or may not be present on all systems
 backends = ["c", "python", "cython", "pyopencl"]
 tests_backends = list(itertools.product(get_test_data(), backends))
