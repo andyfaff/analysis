@@ -29,7 +29,7 @@ jobs:
 
           python3 -m pip install --upgrade pip
           python3 -m pip install wheel setuptools
-          python3 -m pip install numpy scipy pytest
+          python3 -m pip install "numpy<2" scipy pytest
           # install anaklasis from source
           python3 -m pip install git+https://github.com/alexandros-koutsioumpas/anaklasis.git
 
