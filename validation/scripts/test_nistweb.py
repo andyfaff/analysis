@@ -86,7 +86,7 @@ def kernel_test(test_name, slabs, data, local_nodeenv):
 
 
 def install_local_nodeenv(
-    path="tmp", version="v16.15.0", clean=False, force_local_node=False
+    path="tmp", version="v24.15.0", clean=False, force_local_node=False
 ):
     """returns path to node executable and refl and magrefl node wrappers"""
     current_folder = os.path.dirname(__file__)
