@@ -12,10 +12,10 @@ on:
 
 jobs:
   validate_anaklasis:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
 
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: setup apt dependencies
         run: |
@@ -29,9 +29,9 @@ jobs:
 
           python3 -m pip install --upgrade pip
           python3 -m pip install wheel setuptools
-          python3 -m pip install "numpy<2" scipy pytest
+          python3 -m pip install numpy scipy pytest
           # install anaklasis from source
-          python3 -m pip install git+https://github.com/alexandros-koutsioumpas/anaklasis.git
+          python3 -m pip install git+https://github.com/alexandros-koutsioumpas/anaklasis.git --no-build-isolation
 
       - name: Validate
         run: |
