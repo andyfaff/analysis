@@ -6,6 +6,7 @@
 [![Refl1D](https://github.com/reflectivity/analysis/workflows/ORSO%20Val.%20Refl1D/badge.svg)](https://github.com/reflectivity/analysis/actions/workflows/validate_ref1d.yml)
 [![RefNX](https://github.com/reflectivity/analysis/workflows/ORSO%20Val.%20refnx/badge.svg)](https://github.com/reflectivity/analysis/actions/workflows/validate_refnx.yml)
 [![NISTWeb](https://github.com/reflectivity/analysis/workflows/ORSO%20Val.%20NIST%20Web%20Calculator/badge.svg)](https://github.com/reflectivity/analysis/actions/workflows/validate_nistweb.yml)
+[![RATApi](https://github.com/reflectivity/analysis/workflows/ORSO%20Val.%20ratapi/badge.svg)](https://github.com/reflectivity/analysis/actions/workflows/validate_ratapi.yml)
 
 
 This is a repository for documents related to the operations of the 
